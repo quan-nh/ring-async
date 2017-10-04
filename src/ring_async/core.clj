@@ -3,6 +3,7 @@
   (:require [clojure.core.async :as async :refer [go <!]]
             [clojure.java.io :as io]
             [compojure.core :refer [GET defroutes]]
+            [compojure.route :as route]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring-async.sse :refer [sse-handler]]
             [ring.core.protocols :refer [StreamableResponseBody]]
@@ -19,7 +20,8 @@
               (recur)))))))
 
 (defroutes app-routes
-           (GET "/sse" [] sse-handler))
+           (GET "/sse" [] sse-handler)
+           (route/not-found ""))
 
 (def app
   (-> app-routes
