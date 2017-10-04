@@ -5,6 +5,7 @@
             [compojure.core :refer [GET defroutes]]
             [compojure.route :as route]
             [ring.adapter.jetty :refer [run-jetty]]
+            [ring-async.middleware :refer [wrap-exception]]
             [ring-async.sse :refer [sse-handler]]
             [ring.core.protocols :refer [StreamableResponseBody]]
             [ring.middleware.resource :refer [wrap-resource]])
@@ -21,11 +22,13 @@
 
 (defroutes app-routes
            (GET "/sse" [] sse-handler)
+           (GET "/ex" [] (throw (Exception. "bad")))
            (route/not-found ""))
 
 (def app
   (-> app-routes
-      (wrap-resource "public")))
+      (wrap-resource "public")
+      (wrap-exception)))
 
 (defn -main [& args]
   (run-jetty app {:port 3000 :async? true}))
