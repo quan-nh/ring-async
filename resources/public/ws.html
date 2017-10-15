@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ws</title>
+</head>
+<body>
+    <script>
+        var exampleSocket = new WebSocket("ws://localhost:3000/ws");
+
+        exampleSocket.onopen = function (event) {
+          document.body.innerHTML += 'Connection was opened.<br>';
+          document.body.innerHTML += 'Sending text..<br>';
+          exampleSocket.send("Here's some text that the server is urgently awaiting!");
+        };
+
+        exampleSocket.onmessage = function (event) {
+          document.body.innerHTML += 'Receive: ' + event.data + '<br>';
+          document.body.innerHTML += 'Close connection.';
+          exampleSocket.close();
+        }
+    </script>
+</body>
+</html>

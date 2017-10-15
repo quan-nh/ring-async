@@ -4,9 +4,10 @@
             [clojure.java.io :as io]
             [compojure.core :refer [GET defroutes]]
             [compojure.route :as route]
-            [ring.adapter.jetty :refer [run-jetty]]
+            [ring.adapter.jetty9 :refer [run-jetty]]
             [ring-async.middleware :refer [wrap-exception]]
             [ring-async.sse :refer [sse-handler]]
+            [ring-async.ws :refer [ws-handler]]
             [ring.core.protocols :refer [StreamableResponseBody]]
             [ring.middleware.resource :refer [wrap-resource]])
   (:import (clojure.core.async.impl.channels ManyToManyChannel)))
@@ -31,4 +32,7 @@
       (wrap-exception)))
 
 (defn -main [& args]
-  (run-jetty app {:port 3000 :async? true}))
+  (run-jetty app {:port                 3000
+                  :async?               true
+                  :websockets           {"/ws" ws-handler}
+                  :allow-null-path-info true}))
